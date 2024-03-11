@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+<<<<<<< HEAD
+  <suite started-at="2024-02-23T17:18:06 IST" name="Default suite" finished-at="2024-02-23T17:18:08 IST" duration-ms="1852">
+    <groups>
+    </groups>
+    <test started-at="2024-02-23T17:18:06 IST" name="Default test" finished-at="2024-02-23T17:18:08 IST" duration-ms="1852">
+      <class name="tests.GetAndPostExamples">
+        <test-method signature="testPost()[pri:0, instance:tests.GetAndPostExamples@43dac38f]" started-at="2024-02-23T17:18:06 IST" name="testPost" finished-at="2024-02-23T17:18:08 IST" duration-ms="1807" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- testPost -->
+      </class> <!-- tests.GetAndPostExamples -->
+=======
+  <suite started-at="2024-03-06T10:06:48Z" name="Default suite" finished-at="2024-03-06T10:06:52Z" duration-ms="3917">
+    <groups>
+    </groups>
+    <test started-at="2024-03-06T10:06:48Z" name="Default test" finished-at="2024-03-06T10:06:52Z" duration-ms="3917">
+      <class name="tests.ParameterTest">
+        <test-method signature="yahooLoginTest()[pri:0, instance:tests.ParameterTest@68df9280]" started-at="2024-03-06T15:36:48Z" name="yahooLoginTest" finished-at="2024-03-06T15:36:52Z" duration-ms="3902" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- yahooLoginTest -->
+      </class> <!-- tests.ParameterTest -->
+>>>>>>> ad0e288 (Testing)
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
