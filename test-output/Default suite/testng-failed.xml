@@ -3,13 +3,13 @@
 <suite name="Failed suite [Default suite]" guice-stage="DEVELOPMENT">
   <test name="Default test(failed)">
     <classes>
-      <class name="PracticeTests.FrameHandleTest">
+      <class name="PracticeTests.HighlightElement">
         <methods>
           <include name="setUp"/>
+          <include name="highlight"/>
           <include name="tearDown"/>
-          <include name="frameHandle"/>
         </methods>
-      </class> <!-- PracticeTests.FrameHandleTest -->
+      </class> <!-- PracticeTests.HighlightElement -->
     </classes>
   </test> <!-- Default test(failed) -->
 </suite> <!-- Failed suite [Default suite] -->

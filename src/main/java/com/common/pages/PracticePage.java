@@ -1,7 +1,15 @@
 package com.common.pages;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
+
+import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -35,6 +43,12 @@ public class PracticePage extends BasePage {
 	private WebElement addOn;
 	@FindBy(how = How.XPATH, using = "//div[text()='SpiceMax' and @class ='css-76zvg2 r-homxoj r-ubezar']")
 	private WebElement mouseHoverOption;
+	@FindBy(how = How.XPATH, using = "//div[@id='draggable']//child::p")
+	private WebElement dragBtn;
+	@FindBy(how = How.XPATH, using = "//div[@id='droppable']//child::p")
+	private WebElement dropBtn;
+	@FindBy(how = How.XPATH, using = "//div//child::button[@id='newWindowBtn']")
+	private WebElement popWindow;
 
 	public PracticePage(WebDriver driver) {
 		this.driver = driver;
@@ -51,10 +65,19 @@ public class PracticePage extends BasePage {
 
 	public void navigateToCRM() {
 		driver.get("https://classic.freecrm.com/");
+		System.out.println(driver.getTitle());
 	}
 
 	public void navigateToSpiceJet() {
 		driver.get("https://www.spicejet.com/");
+	}
+
+	public void navigateToDragAndDrop() {
+		driver.get("https://jqueryui.com/droppable/");
+	}
+
+	public void navigateToHYR() {
+		driver.get("https://www.hyrtutorials.com/p/window-handles-practice.html");
 	}
 
 	public void switchToPopUp() {
@@ -78,10 +101,15 @@ public class PracticePage extends BasePage {
 		Thread.sleep(2000);
 	}
 
-	public void login() {
+	public void login() throws Throwable {
 		userName.sendKeys("rakshitha");
 		password.sendKeys("Test@1");
+		drawBorder(loginCRM);
+		flash(loginCRM);
+		generateAlert("alert from page");
+		Thread.sleep(3000);
 		loginCRM.click();
+		System.out.println(driver.getTitle());
 
 	}
 
@@ -101,5 +129,99 @@ public class PracticePage extends BasePage {
 		Thread.sleep(3000);
 		action.moveToElement(mouseHoverOption).click();
 
+	}
+
+	public void dragAndDrop() {
+		driver.switchTo().frame(0);
+		Actions action = new Actions(driver);
+		action.clickAndHold(dragBtn).moveToElement(dropBtn).release().build().perform();
+
+	}
+
+	public void naviagteBack() {
+		driver.navigate().back();
+	}
+
+	public void naviagteFoward() {
+		driver.navigate().forward();
+	}
+
+	public void takeScreenshot() throws IOException {
+		File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(src, new File("C:\\Users\\Manasa\\Downloads\\photo.png"));
+	}
+
+	public void getWindowHandles() {
+		clickBtn(popWindow);
+		Set<String> handles = driver.getWindowHandles();
+		Iterator<String> it = handles.iterator();
+		String parentWindow = it.next();
+		System.out.println("ParentWindowHandle : " + parentWindow);
+		String childWindow = it.next();
+		System.out.println("childWindowHandle : " + childWindow);
+		driver.switchTo().window(childWindow);
+		System.out.println("childwindowtile:" + driver.getTitle());
+		driver.close();
+		driver.switchTo().window(parentWindow);
+		System.out.println("Parentwindowtile:" + driver.getTitle());
+
+	}
+
+	public void flash(WebElement element) {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		String bgcolour = element.getCssValue("backgroundColor");
+		for (int i = 0; i < 100; i++) {
+			changecolour("rgb(0,200,0)", element);
+			changecolour(bgcolour, element);
+		}
+
+	}
+
+	public void changecolour(String colour, WebElement element) {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("arguments[0].style.backgroundColor='" + colour + "'", element);
+	}
+
+	public void drawBorder(WebElement element) {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("arguments[0].style.border='3px solid red'", element);
+
+	}
+
+	public void generateAlert(String message) {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("alert('" + message + "')");
+	}
+
+	public void clickByJS(WebElement element) {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("arguments[0].click();", element);
+	}
+
+	public void refreshBrowser() {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("history.go(0)");
+	}
+
+	public String getTitleByJS() {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		String title = js.executeScript("return document.title;").toString();
+		return title;
+	}
+
+	public static String getInnerText() {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		String innerText = js.executeScript("return document.documentElement.innerText;").toString();
+		return innerText;
+	}
+
+	public static void scrollDownByJS() {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("window.scroll(0,document.body.scrollHeight)");
+	}
+
+	public static void scrollToViewByJS(WebElement element) {
+		JavascriptExecutor js = ((JavascriptExecutor) driver);
+		js.executeScript("arguments.scrollIntoView(true);", element);
 	}
 }

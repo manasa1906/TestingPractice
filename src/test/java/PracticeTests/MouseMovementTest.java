@@ -15,4 +15,12 @@ public class MouseMovementTest extends BasePage {
 		practicePage.mouseHoverable();
 		Thread.sleep(3000);
 	}
+
+	@Test
+	public void dragAndDrop() throws Throwable {
+		practicePage = getPracticePage();
+		practicePage.navigateToDragAndDrop();
+		practicePage.dragAndDrop();
+		Thread.sleep(3000);
+	}
 }
