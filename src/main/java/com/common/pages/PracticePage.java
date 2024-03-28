@@ -3,10 +3,12 @@ package com.common.pages;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -16,6 +18,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.How;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.Select;
 
 import com.common.utils.BasePage;
 
@@ -49,6 +52,14 @@ public class PracticePage extends BasePage {
 	private WebElement dropBtn;
 	@FindBy(how = How.XPATH, using = "//div//child::button[@id='newWindowBtn']")
 	private WebElement popWindow;
+	@FindBy(how = How.XPATH, using = "//textarea[@id='APjFqb']")
+	private static WebElement googleSearchBtn;
+	@FindBy(how = How.XPATH, using = "//ul[@role='listbox']//li")
+	private static List<WebElement> searchSuggestions;
+	@FindBy(how = How.XPATH, using = "//div[@id='crmcalendar']//descendant::select[@name='slctMonth']")
+	private static WebElement calendarMonth;
+	@FindBy(how = How.XPATH, using = "//div[@id='crmcalendar']//descendant::select[@name='slctYear']")
+	private static WebElement calendarYear;
 
 	public PracticePage(WebDriver driver) {
 		this.driver = driver;
@@ -57,6 +68,10 @@ public class PracticePage extends BasePage {
 
 	public void navigateToReddif() {
 		driver.get("https://mail.rediff.com/");
+	}
+
+	public void navigateToGoogle() {
+		driver.get("https://google.com/");
 	}
 
 	public void navigateToFile() {
@@ -106,8 +121,7 @@ public class PracticePage extends BasePage {
 		password.sendKeys("Test@1");
 		drawBorder(loginCRM);
 		flash(loginCRM);
-		generateAlert("alert from page");
-		Thread.sleep(3000);
+		//generateAlert("alert from page");
 		loginCRM.click();
 		System.out.println(driver.getTitle());
 
@@ -170,7 +184,7 @@ public class PracticePage extends BasePage {
 	public void flash(WebElement element) {
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		String bgcolour = element.getCssValue("backgroundColor");
-		for (int i = 0; i < 100; i++) {
+		for (int i = 0; i < 10; i++) {
 			changecolour("rgb(0,200,0)", element);
 			changecolour(bgcolour, element);
 		}
@@ -223,5 +237,62 @@ public class PracticePage extends BasePage {
 	public static void scrollToViewByJS(WebElement element) {
 		JavascriptExecutor js = ((JavascriptExecutor) driver);
 		js.executeScript("arguments.scrollIntoView(true);", element);
+	}
+
+	public static void googleSearch() throws Throwable {
+		googleSearchBtn.sendKeys("Java");
+		List<WebElement> list = searchSuggestions;
+		System.out.println(list.size());
+		for (int i = 0; i < list.size(); i++) {
+			System.out.println(list.get(i).getText());
+			if (list.get(i).getText().contains("javascript")) {
+				list.get(i).click();
+				Thread.sleep(3000);
+				break;
+			}
+		}
+
+	}
+
+	public static WebElement findElementByXPath(String xpath) {
+		return driver.findElement(By.xpath(xpath));
+	}
+
+	public static void calendarSearch(String date) {
+		driver.switchTo().frame("mainpanel");
+
+		String dateArray[] = date.split("-");
+		String day = dateArray[0];
+		String month = dateArray[1];
+		String year = dateArray[2];
+		Select select = new Select(calendarMonth);
+		select.selectByVisibleText(month);
+		Select select1 = new Select(calendarYear);
+		select1.selectByVisibleText(year);
+		final int totalWeekDays = 7;
+		String dayValue = null;
+		boolean flag = false;
+		for (int row = 2; row <= 7; row++) {
+			for (int column = 1; column <= totalWeekDays; column++) {
+				try {
+					dayValue = findElementByXPath("//div[@id=\"crmcalendar\"]/table/tbody/tr[2]/td/table/tbody/tr["
+							+ row + "]/td[" + column + "]").getText();
+				} catch (Exception e) {
+					System.out.println("Enter a correct date");
+					flag = true;
+					break;
+				}
+				System.out.println(dayValue);
+				if (dayValue.equals(day)) {
+					flag = true;
+					findElementByXPath("//div[@id=\"crmcalendar\"]/table/tbody/tr[2]/td/table/tbody/tr[" + row + "]/td["
+							+ column + "]").click();
+					break;
+				}
+			}
+			if (flag)
+				break;
+		}
+
 	}
 }
